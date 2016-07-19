@@ -3,20 +3,24 @@ use strict;
 use warnings;
 
 die "
-This program converts PED to folded SFS of DaDi (2 outgroups; 2 or 3 ingroup populations).\n
+This program makes folded SFS from PED file (2 outgroups; 2|3|4 ingroup populations).\n
 Only biallelic loci without missing allele are counted.\n
 Auther: Woody\n
-Usage: $0 <a one-line list file of PopID|\"Excluded\" of each line in the ped file> <in.ped> <out.sfs>\n\n" if @ARGV < 3;
+Usage: $0 <control> <in.ped> <out.sfs>
+
+The 1st line of the control file is a list of PopID|\"Excluded\" for each line in the ped file.
+The 2nd line of the control file is a list of PopIDs, which defines the order in the output SFS.\n\n" if @ARGV < 3;
 
 open POP, "<", $ARGV[0];
 open PED, "<", $ARGV[1];
 open SFS, ">", $ARGV[2];
 
-my @pop;
-while (<POP>) {
-	chomp;
-	@pop = split /\s+/;
-}
+my $control = <POP>;
+chomp $control;
+my @pop = split /\s+/, $control;
+$control = <POP>;
+chomp $control;
+my @ipl = split /\s+/, $control;
 close POP;
 
 my @ped;
@@ -42,7 +46,7 @@ if (@exc) {
 my %pop;
 ++$pop{$_} for @pop;
 my $nip = keys %pop; # number of ingroup pouplations
-my @ipl = sort keys %pop; # ingroup population list
+die "Error: inconsistent number of ingroup populations!" if @ipl != $nip;
 my @dim; # dimensions of SFS
 push @dim, 2*$pop{$_} for @ipl;
 my @sfs;
@@ -58,6 +62,14 @@ if ($nip == 2) {
 		for my $y (0 .. $dim[1]) {
 			for my $z (0 .. $dim[2]) {
 				$sfs[$x][$y][$z] = 0;
+			}
+		}
+	}
+} elsif ($nip == 4) {
+	for my $x (0 .. $dim[0]) {
+		for my $y (0 .. $dim[1]) {
+			for my $z (0 .. $dim[2]) {
+				$sfs[$x][$y][$z][$_] = 0 for (0 .. $dim[3]);
 			}
 		}
 	}
@@ -96,8 +108,10 @@ for my $j (0 .. @{$ped[0]} - 1) { # SNP (column) index
 	}
 	if ($nip == 2) {
 		++$sfs[$mac{$ipl[0]}][$mac{$ipl[1]}];
-	} else {
+	} elsif ($nip == 3) {
 		++$sfs[$mac{$ipl[0]}][$mac{$ipl[1]}][$mac{$ipl[2]}];
+	} else {
+		++$sfs[$mac{$ipl[0]}][$mac{$ipl[1]}][$mac{$ipl[2]}][$mac{$ipl[3]}];
 	}
 #	warn "Counting: $nfs SNPs were filtered, $ncs SNPs were counted.\n" if $ncs =~ /00000$/;
 }
@@ -117,12 +131,21 @@ if ($nip == 2) {
 			print SFS $sfs[$x][$y], " ";
 		}
 	}
-} else {
+} elsif ($nip == 3) {
 	$num_ele = ($dim[0]+1) * ($dim[1]+1) * ($dim[2]+1) - 2;
 	for my $x (0 .. $dim[0]) {
 		for my $y (0 .. $dim[1]) {
 			for my $z (0 .. $dim[2]) {
 				print SFS $sfs[$x][$y][$z], " ";
+			}
+		}
+	}
+} else {
+	$num_ele = ($dim[0]+1) * ($dim[1]+1) * ($dim[2]+1) * ($dim[3]+1) - 2;
+	for my $x (0 .. $dim[0]) {
+		for my $y (0 .. $dim[1]) {
+			for my $z (0 .. $dim[2]) {
+				print SFS $sfs[$x][$y][$z][$_], " " for (0 .. $dim[3]);
 			}
 		}
 	}
