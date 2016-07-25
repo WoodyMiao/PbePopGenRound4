@@ -8,6 +8,7 @@ Usage: $0 <list (column1: sampleID, column2: file, column3: \"Reference\"|\"Outg
 open LIST, "<", $ARGV[0];
 open O, ">", $ARGV[1];
 
+my $max_miss = 11; # max number of missing individuals
 my $C1;
 my $C2;
 my @id;
@@ -64,7 +65,7 @@ while (readline $file{$C1}) {
 			++$base{$b[1]};
 		}
 		if ($base{N}) {
-			if ($base{N} > 22 or keys %base != 3) {
+			if ($base{N} > 2*$max_miss or keys %base != 3) {
 				next;
 			} else {
 				delete $base{N};

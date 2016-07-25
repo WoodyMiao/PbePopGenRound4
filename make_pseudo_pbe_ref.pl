@@ -2,12 +2,10 @@
 use strict;
 use warnings;
 
-die "\nThis program makes pseudo reference genome using gzipped fasta inputs. The reference allele is the major allele among all inputs.
-\nAuther: Woody\n
-Usage: $0 <in.fa.gz.list> <out.fa.gz>\n\n" if @ARGV < 2;
+# This program makes pseudo PBE reference genome using gzipped fasta inputs. The reference allele is the major allele among all inputs.
 
-open LIST, "<", $ARGV[0];
-open O, "|-", "gzip -9c >$ARGV[1]";
+open LIST, "-|", "ls -1 /share/users/miaolin/6.Pbe_genomics/a1.fasta_CpG_gene_masked/PBEP*.auto.fa.gz";
+open O, "|-", "gzip -9c >pseudo_pbe_ref.fa.gz";
 
 my @file;
 while (<LIST>) {
@@ -44,6 +42,26 @@ while (readline $file[0]) {
 			if ($base{$_} > $num_alle) {
 				$ref_alle = $_;
 				$num_alle = $base{$_};
+			}
+		}
+		my @max_alle;
+		for (keys %base) { 
+			if ($base{$_} == $num_alle) {
+				push @max_alle, $_;
+			}
+		}
+		if (@max_alle and @max_alle > 1) {
+			my $r = rand;
+			if ($r < 1/@max_alle) {
+				$ref_alle = $max_alle[0];
+			} elsif ($r >= 1/@max_alle and $r < 2/@max_alle) {
+				$ref_alle = $max_alle[1];
+			} elsif ($r >= 2/@max_alle and $r < 3/@max_alle) {
+				$ref_alle = $max_alle[2];
+			} elsif ($r >= 3/@max_alle and $r < 4/@max_alle) {
+				$ref_alle = $max_alle[3];
+			} else {
+				warn;
 			}
 		}
 		$ref_seq .= $ref_alle;
