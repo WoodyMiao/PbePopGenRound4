@@ -5,7 +5,7 @@ use warnings;
 
 # This program generate pseudo PVI reference genome using FCA reference and BSNP output.
 
-open REF, "<", "/bak/archive/projects/LeopardCat/reference/felCat8.fa";
+open REF, "<", "/bak/archive/projects/LeopardCat/reference/felCat8_gene_masked_auto.fa";
 open SNP, "-|", "zcat /bak/archive/projects/LeopardCat/2.unBQSR_BSNP/PVIP0012.SNP.gz";
 open NSN, "<", "/bak/archive/projects/LeopardCat/2.unBQSR_BSNP/PVIP0012.nSNP";
 open OUT, "|-", "gzip -9c >pseudo_pvi_ref.fa.gz";

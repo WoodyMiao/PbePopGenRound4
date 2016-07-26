@@ -33,7 +33,7 @@ while (<LIST>) {
 close LIST;
 my %base_allele = ("A", ["A","A"], "C", ["C","C"], "G", ["G","G"], "T", ["T","T"], "R", ["A","G"], "Y", ["C","T"], "M", ["A","C"], "K", ["G","T"], "S", ["G","C"], "W", ["A","T"], "N", ["N","N"]);
 my %chr_gt;
-print O "$C1\t$C2\tAllele1\t", join("\t", sort keys %pop), "\tAllele2\t", join("\t", sort keys %pop), "\tChromosome\tOneBasedCoordinate\n";
+print O "$C1\t$C2\tAllele1\t", join("\t", sort keys %pop), "\tAllele2\t", join("\t", sort keys %pop), "\tChrID\tOneBasedCoordinate\n";
 while (readline $file{$C1}) {
 	chomp;
 	s/^>//;
