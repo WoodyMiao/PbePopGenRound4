@@ -62,33 +62,6 @@ die "Error: inconsistent number of ingroup populations!" if @ipl != $nip;
 my @dim; # dimensions of SFS
 push @dim, 2*$pop{$_} for @ipl;
 
-my @sfs;
-if ($nip == 2) {
-	for my $x (0 .. $dim[0]) {
-		for my $y (0 .. $dim[1]) {
-			$sfs[$x][$y] = 0;
-		}
-	}
-} elsif ($nip == 3) {
-	for my $x (0 .. $dim[0]) {
-		for my $y (0 .. $dim[1]) {
-			for my $z (0 .. $dim[2]) {
-				$sfs[$x][$y][$z] = 0;
-			}
-		}
-	}
-} elsif ($nip == 4) {
-	for my $x (0 .. $dim[0]) {
-		for my $y (0 .. $dim[1]) {
-			for my $z (0 .. $dim[2]) {
-				$sfs[$x][$y][$z][$_] = 0 for (0 .. $dim[3]);
-			}
-		}
-	}
-} else {
-	die "Error: there are $nip populations.\n";
-}
-
 my @bs; # array of 1 Mb windows of @ped;
 my @bs_ance;
 my $chrnum = 1;
@@ -127,13 +100,38 @@ for my $j (0 .. @{$ped[0]} - 1) { # SNP (column) index
 }
 ++$bsi;
 warn "Picking SNP completed. Number of bootstrap units: $bsi\n";
-undef @ped;
-undef @map;
+delete $ped[$_] for (0 .. @ped-1);
+warn "RAM used by PED was released.\n";
 
 for (0 .. $nbr-1) {
 	my $file = sprintf("%02d.fs", $_);
 	open my $out, ">", $file;
-	my @s = @sfs;
+	my @sfs;
+	if ($nip == 2) {
+		for my $x (0 .. $dim[0]) {
+			for my $y (0 .. $dim[1]) {
+				$sfs[$x][$y] = 0;
+			}
+		}
+	} elsif ($nip == 3) {
+		for my $x (0 .. $dim[0]) {
+			for my $y (0 .. $dim[1]) {
+				for my $z (0 .. $dim[2]) {
+					$sfs[$x][$y][$z] = 0;
+				}
+			}
+		}
+	} elsif ($nip == 4) {
+		for my $x (0 .. $dim[0]) {
+			for my $y (0 .. $dim[1]) {
+				for my $z (0 .. $dim[2]) {
+					$sfs[$x][$y][$z][$_] = 0 for (0 .. $dim[3]);
+				}
+			}
+		}
+	} else {
+		die "Error: there are $nip populations.\n";
+	}
 	for (1 .. $bsi) {
 		my $r = int(rand($bsi));
 		if (!$bs[$r][0][0][0]) {
@@ -150,11 +148,11 @@ for (0 .. $nbr-1) {
 				}
 			}
 			if ($nip == 2) {
-				++$s[$dac{$ipl[0]}][$dac{$ipl[1]}];
+				++$sfs[$dac{$ipl[0]}][$dac{$ipl[1]}];
 			} elsif ($nip == 3) {
-				++$s[$dac{$ipl[0]}][$dac{$ipl[1]}][$dac{$ipl[2]}];
+				++$sfs[$dac{$ipl[0]}][$dac{$ipl[1]}][$dac{$ipl[2]}];
 			} else {
-				++$s[$dac{$ipl[0]}][$dac{$ipl[1]}][$dac{$ipl[2]}][$dac{$ipl[3]}];
+				++$sfs[$dac{$ipl[0]}][$dac{$ipl[1]}][$dac{$ipl[2]}][$dac{$ipl[3]}];
 			}
 		}
 	}
@@ -167,7 +165,7 @@ for (0 .. $nbr-1) {
 		$num_ele = ($dim[0]+1) * ($dim[1]+1) - 2;
 		for my $x (0 .. $dim[0]) {
 			for my $y (0 .. $dim[1]) {
-				print $out $s[$x][$y], " ";
+				print $out $sfs[$x][$y], " ";
 			}
 		}
 	} elsif ($nip == 3) {
@@ -175,7 +173,7 @@ for (0 .. $nbr-1) {
 		for my $x (0 .. $dim[0]) {
 			for my $y (0 .. $dim[1]) {
 				for my $z (0 .. $dim[2]) {
-					print $out $s[$x][$y][$z], " ";
+					print $out $sfs[$x][$y][$z], " ";
 				}
 			}
 		}
@@ -184,7 +182,7 @@ for (0 .. $nbr-1) {
 		for my $x (0 .. $dim[0]) {
 			for my $y (0 .. $dim[1]) {
 				for my $z (0 .. $dim[2]) {
-					print $out $s[$x][$y][$z][$_], " " for (0 .. $dim[3]);
+					print $out $sfs[$x][$y][$z][$_], " " for (0 .. $dim[3]);
 				}
 			}
 		}
