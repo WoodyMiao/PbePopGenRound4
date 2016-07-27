@@ -8,7 +8,7 @@ Usage: $0 <list (column1: sampleID, column2: file, column3: \"Reference\"|\"Outg
 open LIST, "<", $ARGV[0];
 open O, ">", $ARGV[1];
 
-my $max_miss = 11; # max number of missing individuals
+my $max_miss = 7; # max number of missing individuals
 my $C1;
 my $C2;
 my @id;
