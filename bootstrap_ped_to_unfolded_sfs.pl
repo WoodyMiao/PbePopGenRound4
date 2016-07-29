@@ -100,8 +100,8 @@ for my $j (0 .. @{$ped[0]} - 1) { # SNP (column) index
 }
 ++$bsi;
 warn "Picking SNP completed. Number of bootstrap units: $bsi\n";
-delete $ped[$_] for (0 .. @ped-1);
-warn "RAM used by PED was released.\n";
+undef @ped;
+undef @map;
 
 for (0 .. $nbr-1) {
 	my $file = sprintf("%02d.fs", $_);
