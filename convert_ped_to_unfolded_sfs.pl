@@ -83,6 +83,7 @@ my $ncs = 0; # number of counted SNPs
 for my $j (0 .. @{$ped[0]} - 1) { # SNP (column) index
 	my %alle; # overall allele count
 	my %oual; # outgroup allele count
+	my %inal; # ingroup allele count
 	for my $i (0 .. @ped - 1) { # Sample (row) index
 		my @a = split / /, $ped[$i][$j];
 		++$alle{$a[0]};
@@ -90,9 +91,12 @@ for my $j (0 .. @{$ped[0]} - 1) { # SNP (column) index
 		if ($pop[$i] eq "Outgroup") {
 			++$oual{$a[0]};
 			++$oual{$a[1]};
+		} else {
+			++$inal{$a[0]};
+			++$inal{$a[1]};
 		}
 	}
-	if ($alle{"0"} or keys %alle != 2 or keys %oual != 1) {
+	if ($alle{"0"} or keys %alle != 2 or keys %oual != 1 or keys %inal == 1) {
 		++$nfs;
 		next;
 	}
@@ -129,7 +133,9 @@ if ($nip == 2) {
 	$num_ele = ($dim[0]+1) * ($dim[1]+1) - 2;
 	for my $x (0 .. $dim[0]) {
 		for my $y (0 .. $dim[1]) {
-			print SFS $sfs[$x][$y], " ";
+			print SFS $sfs[$x][$y];
+			last if $x == $dim[0] and $y == $dim[1];
+			print SFS " ";
 		}
 	}
 } elsif ($nip == 3) {
@@ -137,7 +143,9 @@ if ($nip == 2) {
 	for my $x (0 .. $dim[0]) {
 		for my $y (0 .. $dim[1]) {
 			for my $z (0 .. $dim[2]) {
-				print SFS $sfs[$x][$y][$z], " ";
+				print SFS $sfs[$x][$y][$z];
+				last if $x == $dim[0] and $y == $dim[1] and $z == $dim[2];
+				print SFS " ";
 			}
 		}
 	}
@@ -146,7 +154,11 @@ if ($nip == 2) {
 	for my $x (0 .. $dim[0]) {
 		for my $y (0 .. $dim[1]) {
 			for my $z (0 .. $dim[2]) {
-				print SFS $sfs[$x][$y][$z][$_], " " for (0 .. $dim[3]);
+				for (0 .. $dim[3]) {
+					print SFS $sfs[$x][$y][$z][$_];
+					last if $x == $dim[0] and $y == $dim[1] and $z == $dim[2] and $_ == $dim[3];
+					print SFS " ";
+				}
 			}
 		}
 	}
