@@ -171,7 +171,7 @@ for (0 .. $nbr-1) {
 			for my $y (0 .. $dim[1]) {
 				print $out $sfs[$x][$y];
 				last if $x == $dim[0] and $y == $dim[1];
-				print SFS " ";
+				print $out " ";
 			}
 		}
 	} elsif ($nip == 3) {
@@ -181,7 +181,7 @@ for (0 .. $nbr-1) {
 				for my $z (0 .. $dim[2]) {
 					print $out $sfs[$x][$y][$z];
 					last if $x == $dim[0] and $y == $dim[1] and $z == $dim[2];
-					print SFS " ";
+					print $out " ";
 				}
 			}
 		}
@@ -193,7 +193,7 @@ for (0 .. $nbr-1) {
 					for (0 .. $dim[3]) {
 						print $out $sfs[$x][$y][$z][$_];
 						last if $x == $dim[0] and $y == $dim[1] and $z == $dim[2] and $_ == $dim[3];
-						print SFS " ";
+						print $out " ";
 					}
 				}
 			}
