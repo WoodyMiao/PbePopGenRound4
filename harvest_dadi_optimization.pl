@@ -5,9 +5,14 @@ use warnings;
 for (@ARGV) {
 	my $i = $_;
 	open I, "<", $i;
+	my $finish;
 	while (<I>) {
-		last if /^Finshed/;
+		if (/^Finshed/) {
+			$finish = 1;
+			last;
+		}
 	}
+	next if !$finish;
 	$/ = "]";
 	my $a = <I>;
 	chomp $a;

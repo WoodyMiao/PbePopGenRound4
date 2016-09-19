@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 die "This program generate fasta using reference and BSNP output.\nAuther: Woody
-Usage: $0 <reference.fa> <SNP.gz> <nSNP> <output.fa.gz> <minimum coverage> <maximum coverage> <A=autosome|X=chrX> <minimum Phred quality>\n" if @ARGV < 7;
+Usage: $0 <reference.fa> <SNP.gz> <nSNP> <output.fa.gz> <minimum coverage> <maximum coverage> <A=autosome|X=chrX> <minimum Phred quality>\n" if @ARGV < 8;
 
 open REF, "<", $ARGV[0];
 open SNP, "-|", "zcat $ARGV[1]";
