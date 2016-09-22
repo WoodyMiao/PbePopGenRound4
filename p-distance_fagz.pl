@@ -7,8 +7,8 @@ Usage: $0 <list (column1: sampleID, column2: file)> <output_prefix>\n
 This program reads all files into RAM simultaneously, so make sure there is enough RAM before running.\n\n" if @ARGV < 2;
 
 open I, "<", $ARGV[0];
-open O1, ">", "$ARGV[1].txt";
-open O2, ">", "$ARGV[1].nex";
+open O1, ">", "$ARGV[1]_dist.txt";
+open O2, ">", "$ARGV[1]_dist.nex";
 
 my @id;
 my %seq;
@@ -80,7 +80,7 @@ print O2 "Begin paup;
 \tQuit;
 End;\n";
 close O2;
-system "paup $ARGV[1].nex";
+system "paup $ARGV[1]_dist.nex";
 
 sub p_distance {
 	my ($seq1, $seq2) = @_;
