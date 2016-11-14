@@ -34,6 +34,7 @@ foreach (keys %ref) {
 <SNP>;
 while (<SNP>) {
 	my @a = split /\t/;
+	next unless $ref{$a[0]};
 	if ($a[1] >= $len{$a[0]}) {
 		warn "$ARGV[1] $a[0] $a[1] >= $len{$a[0]}\n";
 		next;
@@ -55,6 +56,7 @@ close SNP;
 <NSN>;
 while (<NSN>) {
 	my @a = split / +/;
+	next unless $ref{$a[0]};
 	my @b = split //, $a[4];
 	my @c = split //, $a[3];
 	foreach (0 .. $a[2]-1) {
