@@ -17,7 +17,7 @@ my %pop;
 my %file;
 while (<LIST>) {
 	chomp;
-	my @a = split / /;
+	my @a = split /\s+/;
 	push @id, $a[0];
 	$sex{$a[0]} = $a[2];
 	$pop{$a[0]} = $a[3];
