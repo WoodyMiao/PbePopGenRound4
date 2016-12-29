@@ -19,7 +19,7 @@ use warnings;
 #/;
 my @input = qw/
 PBEP0009.chrx.fa.gz
-PBEP0065.chrx.fa.gz
+PVIP0002.chrx.fa.gz
 /;
 
 for (@input) {

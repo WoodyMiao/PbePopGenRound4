@@ -10,7 +10,7 @@ open GT, ">", "$ARGV[1].ped";
 open SNP, ">", "$ARGV[1].pedsnp";
 open IND, ">", "$ARGV[1].pedind";
 
-my $num_miss = 10; # max number of missing individual for each locus
+my $num_miss = 0; # max number of missing individual for each locus
 my @id;
 my %sex;
 my %pop;
